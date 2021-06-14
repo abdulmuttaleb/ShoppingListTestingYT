@@ -73,4 +73,20 @@ class ShoppingDaoTest {
 
         assertThat(shoppingITemPrices).isEqualTo(1*1f + 2*2f + 3*3f)
     }
+
+    @Test
+    fun CRUD_ObserveCertainShoppingItem_ReturnItemCorrectly() = runBlockingTest {
+        val shoppingItem1 = ShoppingItem("name", 1, 1f, "url", id = 1)
+        val shoppingItem2 = ShoppingItem("name", 2, 2f, "url", id = 2)
+        val shoppingItem3 = ShoppingItem("name", 3, 3f, "url", id = 3)
+
+        dao.insertShoppingItem(shoppingItem1)
+        dao.insertShoppingItem(shoppingItem2)
+        dao.insertShoppingItem(shoppingItem3)
+
+        val certainShoppingItem = dao.getShoppingItemWithId(2).getOrAwaitValue()
+
+        assertThat(certainShoppingItem).isEqualTo(shoppingItem2)
+
+    }
 }
