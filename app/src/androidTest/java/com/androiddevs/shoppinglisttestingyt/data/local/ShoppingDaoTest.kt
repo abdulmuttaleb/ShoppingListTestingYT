@@ -87,6 +87,20 @@ class ShoppingDaoTest {
         val certainShoppingItem = dao.getShoppingItemWithId(2).getOrAwaitValue()
 
         assertThat(certainShoppingItem).isEqualTo(shoppingItem2)
+    }
 
+    @Test
+    fun CRUD_UpdateShoppingItem_ReturnsUpdatedData() = runBlockingTest {
+        val shoppingItem = ShoppingItem("name", 1, 1f, "url", id = 1)
+
+        dao.insertShoppingItem(shoppingItem)
+
+        shoppingItem.name = "name Updated"
+
+        dao.updateShoppingItem(shoppingItem)
+
+        val updatedShoppingItem = dao.getShoppingItemWithId(1).getOrAwaitValue()
+
+        assertThat(updatedShoppingItem.name).isEqualTo("name Updated")
     }
 }

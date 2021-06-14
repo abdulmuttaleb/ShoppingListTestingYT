@@ -20,4 +20,7 @@ interface ShoppingDao {
 
     @Query("SELECT SUM(price * amount) from shopping_items")
     fun observeTotalPrice(): LiveData<Float>
+
+    @Update
+    suspend fun updateShoppingItem(shoppingItem: ShoppingItem)
 }
