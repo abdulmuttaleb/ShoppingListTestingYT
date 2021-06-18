@@ -1,20 +1,24 @@
 package com.androiddevs.shoppinglisttestingyt.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.androiddevs.shoppinglisttestingyt.other.Constants
+import com.androiddevs.shoppinglisttestingyt.MainCoroutineRule
 import com.androiddevs.shoppinglisttestingyt.other.Status
 import com.androiddevs.shoppinglisttestingyt.repositories.FakeShoppingRepository
 import com.google.common.truth.Truth.assertThat
 import getOrAwaitValueTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.robolectric.res.android.ResourceString.buildString
 
+@ExperimentalCoroutinesApi
 class ShoppingViewModelTest{
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    var mainCoroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: ShoppingViewModel
 
