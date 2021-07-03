@@ -6,9 +6,11 @@ import androidx.navigation.Navigation
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.filters.MediumTest
 import com.androiddevs.shoppinglisttestingyt.R
+import com.androiddevs.shoppinglisttestingyt.data.local.ShoppingItem
 import com.androiddevs.shoppinglisttestingyt.launchFragmentInHiltContainer
 import com.androiddevs.shoppinglisttestingyt.repositories.FakeShoppingRepositoryAndroidTest
 import com.androiddevs.shoppinglisttestingyt.repositories.ShoppingRepository
@@ -22,6 +24,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import javax.inject.Inject
 
 @MediumTest
 @ExperimentalCoroutinesApi
@@ -34,9 +37,30 @@ class AddShoppingItemFragmentTest{
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @Inject
+    lateinit var fragmentFactory: ShoppingFragmentFactory
+
     @Before
     fun setup(){
         hiltRule.inject()
+    }
+
+    @Test
+    fun clickInsertIntoDb_ShoppingItemInsertedIntoDb(){
+        val testViewModel = ShoppingViewModel(FakeShoppingRepositoryAndroidTest())
+        launchFragmentInHiltContainer<AddShoppingItemFragment>(
+            fragmentFactory = fragmentFactory
+        ) {
+            viewModel = testViewModel
+        }
+
+        onView(withId(R.id.etShoppingItemName)).perform(replaceText("shopping item"))
+        onView(withId(R.id.etShoppingItemAmount)).perform(replaceText("5"))
+        onView(withId(R.id.etShoppingItemPrice)).perform(replaceText("5.5"))
+        onView(withId(R.id.btnAddShoppingItem)).perform(click())
+
+        assertThat(testViewModel.shoppingItems.getOrAwaitValue())
+            .contains(ShoppingItem("shopping item", amount = 5, price = 5.5f, ""))
     }
 
     @Test
